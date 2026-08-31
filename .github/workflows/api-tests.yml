@@ -1,10 +1,32 @@
-name: API Automation & Allure Report
+name: Advanced API Automation Pipeline
 
 on:
   push:
     branches: [ "main", "master" ]
   pull_request:
     branches: [ "main", "master" ]
+  # 1. Cron Schedule: Runs automatically every night at 2:00 AM UTC
+  schedule:
+    - cron: '0 2 * * *'
+  # 2. Workflow Dispatch: Allows manual triggers directly from the GitHub UI with parameters
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select Target Environment'
+        required: true
+        default: 'qa'
+        type: choice
+        options:
+          - qa
+          - staging
+          - production
+      test_suite:
+        description: 'Select Test Suite to Run'
+        required: true
+        default: 'testng.xml'
+        type: choice
+        options:
+          - testng.xml
 
 jobs:
   test:
@@ -21,8 +43,13 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Print Execution Context
+        run: |
+          echo "Executing against environment: ${{ github.event.inputs.environment || 'qa' }}"
+          echo "Running test suite: ${{ github.event.inputs.test_suite || 'testng.xml' }}"
+
       - name: Run Tests with Maven
-        run: mvn clean test
+        run: mvn clean test -DsuiteXmlFile=src/test/resources/${{ github.event.inputs.test_suite || 'testng.xml' }}
 
       - name: Install Allure CLI Manually
         if: always()
@@ -40,5 +67,5 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: allure-report
+          name: allure-report-${{ github.event.inputs.environment || 'qa' }}
           path: target/allure-report
