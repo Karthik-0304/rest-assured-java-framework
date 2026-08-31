@@ -24,10 +24,13 @@ jobs:
       - name: Run Tests with Maven
         run: mvn clean test
 
-      - name: Get Allure Commandline
-        uses: simple-elf/allure-action-install-allure@v2.5
-        with:
-          version: '2.29.0'
+      - name: Install Allure CLI Manually
+        if: always()
+        run: |
+          sudo wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz
+          sudo tar -zxvf allure-2.29.0.tgz -C /opt/
+          sudo ln -s /opt/allure-2.29.0/bin/allure /usr/bin/allure
+          allure --version
 
       - name: Generate Allure Report
         if: always()
