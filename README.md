@@ -1,6 +1,6 @@
 # REST Assured Java API Automation Framework
 
-An enterprise-grade API automation framework built with **Java**, **REST Assured**, **TestNG**, and **Jackson**, featuring full CRUD operation test coverage, JSON schema contract validation, and automated CI/CD execution with Allure reporting.
+An enterprise-grade API automation framework built with **Java**, **REST Assured**, **TestNG**, and **Jackson**, featuring full CRUD operation test coverage, JSON schema contract validation, and an advanced CI/CD pipeline with Allure reporting, manual environment triggers, and cron scheduling.
 
 ## Tech Stack & Libraries
 
@@ -11,7 +11,7 @@ An enterprise-grade API automation framework built with **Java**, **REST Assured
 * **Contract Validation:** RestAssured JSON Schema Validator
 * **Reporting:** Allure Report
 * **Build Tool:** Maven
-* **CI/CD:** GitHub Actions
+* **CI/CD:** GitHub Actions (with Workflow Dispatch & Cron Scheduling)
 
 ## Framework Architecture
 
@@ -20,7 +20,7 @@ api-automation-framework/
 │
 ├── .github/
 │   └── workflows/
-│       └── api-tests.yml        # GitHub Actions CI/CD Pipeline
+│       └── api-tests.yml        # Advanced GitHub Actions Pipeline (Cron & Manual inputs)
 │
 ├── src/
 │   ├── main/java/com/api/
@@ -36,6 +36,7 @@ api-automation-framework/
 │       │
 │       └── resources/
 │           ├── schemas/         # JSON Schema contract files (user-schema.json)
+│           ├── testng.xml       # TestNG Suite configuration
 │           └── config.properties# Environment configurations
 │
 └── pom.xml                      # Maven project dependencies and plugins
@@ -48,20 +49,21 @@ api-automation-framework/
 * **Dynamic Payloads:** Eliminates hardcoded strings by leveraging Jackson POJO serialization and TestNG `@DataProvider`.
 * **Contract Testing:** Validates live API JSON responses against structural blueprint schemas.
 * **Environment Management:** Centralizes configuration properties via a custom lazy-loaded `ConfigLoader` utility.
-* **CI/CD Integration:** Automatically builds, tests, and generates Allure artifacts on every push via GitHub Actions.
+* **Advanced CI/CD Pipeline:** Configured with GitHub Actions supporting manual environment overrides (`qa`, `staging`, `production`), test suite selection, and automated nightly cron runs.
 
 ## Running Tests Locally
 
 1. Clone the repository and open it in **IntelliJ IDEA**.
 2. Run tests via Maven in your terminal:
+
 ```bash
 mvn clean test
 
 ```
 
-
 3. Generate and view the Allure report locally:
+
 ```bash
-allure serve allure-results
+allure serve target/allure-results
 
 ```
